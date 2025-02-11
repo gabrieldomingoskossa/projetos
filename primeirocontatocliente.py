@@ -1,0 +1,6 @@
+nome = input('qual é o seu nome ')
+print('Seja muito bem vindo (a) ')
+nome = input('Para continuar, informe o número do seu CPF ou protocolo ')
+print('Muito obrigado pela informação')
+nome =input('Por favor, informe o motivo do contato? ')
+print('agradecemos o contato, logo alguém da nossa equipe ira entrar em contato')
