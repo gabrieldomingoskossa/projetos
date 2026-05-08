@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Panificadora Gold | Caixa + Cozinha + Balcão Integrado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 30%, #fff5ea, #fae9d8);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .dashboard { max-width: 1500px; margin: 0 auto; }
+        /* header glass */
+        .top-bar {
+            background: rgba(255, 248, 235, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,245,200,0.7);
+        }
+        .logo h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #c5722e, #9e4515);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .badge-demo {
+            background: #d48b4b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-balcao {
+            background: #2c6e4f;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .btn-balcao:hover { background: #1e5a40; transform: scale(0.97); }
+        .reset-btn {
+            background: #2c241a;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: #fff2e4;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .grid-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 45px;
+        }
+        .glass-card {
+            background: rgba(255, 252, 245, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 1.6rem;
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a2c1a;
+            border-left: 5px solid #e69b54;
+            padding-left: 18px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .metrics-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .metric-card {
+            flex: 1;
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+        }
+        .metric-card i { font-size: 2.2rem; color: #d48a45; margin-bottom: 8px; display: block; }
+        .metric-card .value { font-size: 2.4rem; font-weight: 800; color: #2c1b0f; line-height: 1; }
+        .kitchen-scroll {
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .order-item {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-bottom: 14px;
+            border-left: 6px solid #f3b26b;
+        }
+        .order-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: #a57144; margin-bottom: 8px; }
+        .btn-finalizar {
+            background: #2d6a4f;
+            width: 100%;
+            border: none;
+            padding: 8px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .qr-area {
+            background: rgba(255, 241, 224, 0.9);
+            border-radius: 2rem;
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .qr-box { background: white; padding: 12px; border-radius: 28px; }
+
+        /* MODAL para pedido no balcão */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff9f0;
+            border-radius: 2rem;
+            max-width: 600px;
+            width: 90%;
+            padding: 1.5rem;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.3s;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a2c1a;
+        }
+        .close-modal {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #a57144;
+        }
+        .produtos-lista-modal {
+            max-height: 350px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+        .produto-item-modal {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .controle-qtd {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .controle-qtd button {
+            background: #e7c7aa;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .qtd-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .btn-enviar-pedido {
+            background: #c47a3e;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        .resumo-pedido {
+            background: #f5e5d5;
+            padding: 10px;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        @media (max-width: 850px) { .grid-2cols { grid-template-columns: 1fr; } }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        button { transition: 0.2s; cursor: pointer; }
+        button:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+<div class="dashboard" id="appRoot">
+    <div class="top-bar">
+        <div class="logo">
+            <h1><i class="fas fa-bread-slice"></i> Panificadora Gold</h1>
+            <p>Caixa + Cozinha + Balcão Integrado</p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn-balcao" id="abrirBalcaoBtn"><i class="fas fa-hand-peace"></i> Pedido Rápido Balcão</button>
+            <div class="badge-demo"><i class="fas fa-sync-alt"></i> DEMO automática a cada 10s</div>
+            <button class="reset-btn" id="resetDemoBtn"><i class="fas fa-trash-alt"></i> Reiniciar simulação</button>
+        </div>
+    </div>
+
+    <div class="grid-2cols">
+        <!-- PAINEL CAIXA -->
+        <div class="glass-card">
+            <div class="card-title"><i class="fas fa-cash-register"></i> Frente de Caixa</div>
+            <div class="metrics-row">
+                <div class="metric-card"><i class="fas fa-users"></i><div class="value" id="clientesCount">0</div><div>Clientes atendidos</div></div>
+                <div class="metric-card"><i class="fas fa-shopping-cart"></i><div class="value" id="produtosCount">0</div><div>Produtos vendidos</div></div>
+                <div class="metric-card"><i class="fas fa-dollar-sign"></i><div class="value" id="faturamentoValue">R$ 0</div><div>Faturamento total</div></div>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.7rem; background: #f3e5d5; border-radius: 60px; padding: 8px; text-align: center;">
+                <i class="fas fa-chart-line"></i> Dados atualizados em tempo real
+            </div>
+        </div>
+
+        <!-- PAINEL COZINHA -->
+        <div class="glass-card">
+            <div class="card-title"><i class="fas fa-utensils"></i> Cozinha · Pedidos Pendentes</div>
+            <div id="cozinhaList" class="kitchen-scroll">
+                <div style="text-align:center; padding: 30px;">Carregando pedidos...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="qr-area">
+        <div>
+            <h3><i class="fas fa-qrcode"></i> Cardápio Digital para Mesas</h3>
+            <p>Cliente escaneia o QR Code e pede direto do celular. Também funciona com o botão "Pedido Rápido Balcão".</p>
+            <button id="abrirCardapioDemoBtn" style="background:#c77a3e; border:none; padding: 8px 24px; border-radius: 40px; color:white; font-weight: bold;"><i class="fas fa-mobile-alt"></i> Visualizar Cardápio (nova aba)</button>
+        </div>
+        <div id="qrCodeDisplay" class="qr-box"></div>
+    </div>
+    <div style="margin-top: 18px; text-align: center; font-size: 11px; background: #fff0e0; padding: 8px; border-radius: 50px;">
+        ✅ Funcionários do balcão podem fazer pedidos manuais que vão direto para a cozinha e atualizam o caixa.
+    </div>
+</div>
+
+<!-- MODAL PEDIDO BALCÃO -->
+<div id="modalBalcao" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span><i class="fas fa-concierge-bell"></i> Novo Pedido - Balcão</span>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="produtos-lista-modal" id="produtosModalLista"></div>
+        <div class="resumo-pedido" id="resumoModal">Nenhum item selecionado</div>
+        <button class="btn-enviar-pedido" id="enviarPedidoBalcaoBtn"><i class="fas fa-paper-plane"></i> Enviar Pedido para Cozinha</button>
+    </div>
+</div>
+
+<script>
+    // ---------- CONFIGURAÇÃO PRINCIPAL ----------
+    const STORAGE_KEY = "padaria_demo_simulacao";
+    
+    // Cardápio completo (também usado no modal)
+    const PRODUTOS = [
+        { id: "p1", nome: "Pão Francês", preco: 1.20 },
+        { id: "p2", nome: "Baguete Integral", preco: 4.90 },
+        { id: "p3", nome: "Pão de Queijo (6un)", preco: 9.90 },
+        { id: "p4", nome: "Sonho de Creme", preco: 7.50 },
+        { id: "p5", nome: "Coxinha Gourmet", preco: 6.20 },
+        { id: "p6", nome: "Bolo de Cenoura", preco: 14.90 },
+        { id: "p7", nome: "Croissant", preco: 7.90 },
+        { id: "p8", nome: "Torta de Limão", preco: 9.50 },
+        { id: "p9", nome: "Empada de Frango", preco: 6.80 },
+        { id: "p10", nome: "Pão Integral", preco: 5.50 }
+    ];
+    
+    // Funções de persistência
+    function getPedidos() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+    function savePedidos(pedidos) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(pedidos));
+        window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY, newValue: JSON.stringify(pedidos) }));
+    }
+    
+    // Adicionar pedido genérico (usado pela simulação, balcão e QR)
+    function adicionarPedido(clienteId, itens) {
+        if (!itens.length) return false;
+        const pedidos = getPedidos();
+        const novo = {
+            id: Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+            clienteId: clienteId,
+            timestamp: new Date().toISOString(),
+            status: "pending",
+            itens: itens.map(i => ({ nome: i.nome, preco: i.preco, quantidade: i.quantidade }))
+        };
+        pedidos.push(novo);
+        savePedidos(pedidos);
+        return true;
+    }
+    
+    function finalizarPedido(pedidoId) {
+        let pedidos = getPedidos();
+        const idx = pedidos.findIndex(p => p.id == pedidoId && p.status === "pending");
+        if (idx !== -1) {
+            pedidos[idx].status = "completed";
+            savePedidos(pedidos);
+            return true;
+        }
+        return false;
+    }
+    
+    function resetSimulacao() {
+        if (confirm("⚠️ Isso apaga todos os pedidos e reinicia as estatísticas. Continuar?")) {
+            savePedidos([]);
+            renderDashboard();
+        }
+    }
+    
+    // Calcular métricas (todos os pedidos, pendentes ou concluídos, para demonstrar total do dia)
+    function calcularMetricas(pedidos) {
+        let clientes = new Set();
+        let totalProd = 0;
+        let fat = 0;
+        pedidos.forEach(p => {
+            if (p.clienteId) clientes.add(p.clienteId);
+            p.itens.forEach(item => {
+                totalProd += item.quantidade;
+                fat += item.preco * item.quantidade;
+            });
+        });
+        return { clientes: clientes.size, produtos: totalProd, faturamento: fat };
+    }
+    
+    function renderDashboard() {
+        const pedidos = getPedidos();
+        const { clientes, produtos, faturamento } = calcularMetricas(pedidos);
+        document.getElementById('clientesCount').innerText = clientes;
+        document.getElementById('produtosCount').innerText = produtos;
+        document.getElementById('faturamentoValue').innerHTML = `R$ ${faturamento.toFixed(2)}`;
+        
+        const pendentes = pedidos.filter(p => p.status === "pending");
+        const container = document.getElementById('cozinhaList');
+        if (!container) return;
+        if (pendentes.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding: 40px;"><i class="fas fa-check-circle" style="font-size: 2rem; color:#99b87e;"></i><p>Nenhum pedido na cozinha</p></div>`;
+            return;
+        }
+        container.innerHTML = "";
+        pendentes.forEach(ped => {
+            const div = document.createElement('div');
+            div.className = "order-item";
+            const hora = new Date(ped.timestamp).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+            let itensHtml = '';
+            ped.itens.forEach(item => {
+                itensHtml += `<div><strong>${item.quantidade}x</strong> ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2)}</div>`;
+            });
+            div.innerHTML = `
+                <div class="order-header"><span><i class="fas fa-receipt"></i> Pedido #${ped.id.slice(-6)}</span><span>${hora}</span></div>
+                ${itensHtml}
+                <button class="btn-finalizar" data-id="${ped.id}"><i class="fas fa-check"></i> Pedido Pronto (faturar)</button>
+            `;
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.btn-finalizar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                if (finalizarPedido(id)) renderDashboard();
+            });
+        });
+    }
+    
+    // ---------- SIMULAÇÃO AUTOMÁTICA ----------
+    let intervaloSim = null;
+    function gerarPedidoSimulado() {
+        const numItens = Math.floor(Math.random() * 3) + 1;
+        const selecionados = [];
+        const shuffled = [...PRODUTOS];
+        for (let i = 0; i < numItens && shuffled.length; i++) {
+            const prod = shuffled.splice(Math.floor(Math.random() * shuffled.length), 1)[0];
+            const qtd = Math.floor(Math.random() * 2) + 1;
+            selecionados.push({ nome: prod.nome, preco: prod.preco, quantidade: qtd });
+        }
+        if (selecionados.length) {
+            const clienteId = "auto_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+            adicionarPedido(clienteId, selecionados);
+            renderDashboard();
+        }
+    }
+    function iniciarSimulacao() {
+        if (intervaloSim) clearInterval(intervaloSim);
+        intervaloSim = setInterval(() => {
+            gerarPedidoSimulado();
+        }, 10000);
+    }
+    function pararSimulacao() { if (intervaloSim) clearInterval(intervaloSim); }
+    
+    // ---------- FUNCIONALIDADE BALCÃO (MODAL) ----------
+    let carrinhoBalcao = {}; // { prodId: quantidade }
+    function abrirModalBalcao() {
+        carrinhoBalcao = {};
+        const modal = document.getElementById('modalBalcao');
+        if (!modal) return;
+        renderizarProdutosModal();
+        atualizarResumoModal();
+        modal.style.display = 'flex';
+    }
+    
+    function renderizarProdutosModal() {
+        const container = document.getElementById('produtosModalLista');
+        if (!container) return;
+        container.innerHTML = '';
+        PRODUTOS.forEach(prod => {
+            const qtdAtual = carrinhoBalcao[prod.id] || 0;
+            const div = document.createElement('div');
+            div.className = 'produto-item-modal';
+            div.innerHTML = `
+                <div><strong>${prod.nome}</strong><br>R$ ${prod.preco.toFixed(2)}</div>
+                <div class="controle-qtd">
+                    <button class="btn-dec" data-id="${prod.id}">-</button>
+                    <span class="qtd-value" id="qtd-${prod.id}">${qtdAtual}</span>
+                    <button class="btn-inc" data-id="${prod.id}">+</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+        // eventos dos botões
+        document.querySelectorAll('.btn-inc').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                carrinhoBalcao[id] = (carrinhoBalcao[id] || 0) + 1;
+                atualizarQtdDisplay(id);
+                atualizarResumoModal();
+            });
+        });
+        document.querySelectorAll('.btn-dec').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.getAttribute('data-id');
+                if (carrinhoBalcao[id] && carrinhoBalcao[id] > 0) {
+                    carrinhoBalcao[id] -= 1;
+                    if (carrinhoBalcao[id] === 0) delete carrinhoBalcao[id];
+                    atualizarQtdDisplay(id);
+                    atualizarResumoModal();
+                }
+            });
+        });
+    }
+    
+    function atualizarQtdDisplay(prodId) {
+        const span = document.getElementById(`qtd-${prodId}`);
+        if (span) span.innerText = carrinhoBalcao[prodId] || 0;
+    }
+    
+    function atualizarResumoModal() {
+        const resumoDiv = document.getElementById('resumoModal');
+        if (!resumoDiv) return;
+        let totalItens = 0;
+        let totalValor = 0;
+        for (let id in carrinhoBalcao) {
+            const qtd = carrinhoBalcao[id];
+            const produto = PRODUTOS.find(p => p.id === id);
+            if (produto) {
+                totalItens += qtd;
+                totalValor += produto.preco * qtd;
+            }
+        }
+        if (totalItens === 0) {
+            resumoDiv.innerHTML = 'Nenhum item selecionado';
+            return;
+        }
+        resumoDiv.innerHTML = `<strong>${totalItens} itens</strong> | Total: R$ ${totalValor.toFixed(2)}`;
+    }
+    
+    function enviarPedidoBalcao() {
+        const itens = [];
+        for (let id in carrinhoBalcao) {
+            const qtd = carrinhoBalcao[id];
+            if (qtd > 0) {
+                const prod = PRODUTOS.find(p => p.id === id);
+                if (prod) itens.push({ nome: prod.nome, preco: prod.preco, quantidade: qtd });
+            }
+        }
+        if (itens.length === 0) {
+            alert("Adicione pelo menos um produto ao pedido.");
+            return;
+        }
+        // Gera um cliente único para cada pedido de balcão (garante contagem realista de clientes)
+        const clienteId = "balcao_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+        if (adicionarPedido(clienteId, itens)) {
+            alert("✅ Pedido enviado para a cozinha e registrado no caixa!");
+            carrinhoBalcao = {};
+            renderizarProdutosModal();
+            atualizarResumoModal();
+            renderDashboard(); // atualiza interfaces
+            fecharModal();
+        } else {
+            alert("Erro ao enviar pedido.");
+        }
+    }
+    
+    function fecharModal() {
+        const modal = document.getElementById('modalBalcao');
+        if (modal) modal.style.display = 'none';
+    }
+    
+    // ---------- MODO CLIENTE (CARDÁPIO DIGITAL) ----------
+    function abrirCardapioCliente() {
+        const urlBase = window.location.href.split('?')[0];
+        const urlCliente = urlBase + "?mode=cliente";
+        window.open(urlCliente, "_blank");
+    }
+    
+    function renderizarModoCliente() {
+        const appDiv = document.getElementById('appRoot');
+        if (appDiv) appDiv.style.display = 'none';
+        let clientDiv = document.getElementById('clienteRoot');
+        if (!clientDiv) {
+            clientDiv = document.createElement('div');
+            clientDiv.id = 'clienteRoot';
+            document.body.innerHTML = '';
+            document.body.appendChild(clientDiv);
+            document.body.style.background = "#fef3e4";
+        }
+        clientDiv.style.maxWidth = "550px";
+        clientDiv.style.margin = "20px auto";
+        clientDiv.style.padding = "16px";
+        
+        let carrinho = [];
+        let clienteId = sessionStorage.getItem('cliente_demo_id');
+        if (!clienteId) {
+            clienteId = 'cli_demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            sessionStorage.setItem('cliente_demo_id', clienteId);
+        }
+        
+        function atualizarUI() {
+            const cartDiv = document.getElementById('cartItems');
+            const totalSpan = document.getElementById('cartTotal');
+            if (!cartDiv) return;
+            if (carrinho.length === 0) {
+                cartDiv.innerHTML = '<div style="padding: 12px;">Carrinho vazio</div>';
+                totalSpan.innerText = "R$ 0.00";
+                return;
+            }
+            let total = 0;
+            let html = '<div style="max-height:200px; overflow:auto;">';
+            carrinho.forEach((item, idx) => {
+                total += item.preco * item.quantidade;
+                html += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #edd7bc; padding:6px;">
+                            <span>${item.quantidade}x ${item.nome}</span>
+                            <span>R$ ${(item.preco * item.quantidade).toFixed(2)} 
+                            <button class="removeItem" data-idx="${idx}" style="background:none; border:none; color:#b85c1a;">🗑️</button></span>
+                         </div>`;
+            });
+            html += '</div>';
+            cartDiv.innerHTML = html;
+            totalSpan.innerText = `R$ ${total.toFixed(2)}`;
+            document.querySelectorAll('.removeItem').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    let idx = parseInt(btn.getAttribute('data-idx'));
+                    if (!isNaN(idx)) { carrinho.splice(idx,1); atualizarUI(); }
+                });
+            });
+        }
+        
+        let htmlCardapio = `
+            <div style="background:white; border-radius:40px; padding:24px; box-shadow:0 20px 35px rgba(0,0,0,0.1);">
+                <div style="text-align:center;"><i class="fas fa-bread-slice" style="font-size:2rem; color:#c5722e;"></i>
+                <h2 style="color:#452812;">Cardápio Digital</h2><p>Escolha e envie para a cozinha</p></div>
+                <div id="listaProdutos" style="margin:20px 0; display:flex; flex-direction:column; gap:12px;"></div>
+                <div style="background:#f8efdf; border-radius:28px; padding:15px;">
+                    <h3><i class="fas fa-shopping-basket"></i> Seu pedido</h3>
+                    <div id="cartItems">Carrinho vazio</div>
+                    <div style="display:flex; justify-content:space-between; margin-top:10px;"><span>Total:</span> <span id="cartTotal">R$ 0.00</span></div>
+                    <button id="enviaPedidoBtn" style="background:#c47a3e; width:100%; border:none; margin-top:15px; padding:12px; border-radius:60px; color:white; font-weight:bold;">📲 Enviar pedido</button>
+                </div>
+            </div>
+        `;
+        clientDiv.innerHTML = htmlCardapio;
+        const produtosDiv = document.getElementById('listaProdutos');
+        PRODUTOS.forEach(prod => {
+            const card = document.createElement('div');
+            card.style.cssText = "background:#fff7ef; border-radius:20px; padding:12px; display:flex; justify-content:space-between; align-items:center;";
+            card.innerHTML = `<div><strong>${prod.nome}</strong><br>R$ ${prod.preco.toFixed(2)}</div><button class="addBtn" data-nome="${prod.nome}" data-preco="${prod.preco}" data-id="${prod.id}" style="background:#ddad7c; border:none; padding:6px 16px; border-radius:50px;">+ Adicionar</button>`;
+            produtosDiv.appendChild(card);
+        });
+        document.querySelectorAll('.addBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const nome = btn.getAttribute('data-nome');
+                const preco = parseFloat(btn.getAttribute('data-preco'));
+                const id = btn.getAttribute('data-id');
+                const exist = carrinho.find(i => i.id === id);
+                if (exist) exist.quantidade++;
+                else carrinho.push({ id, nome, preco, quantidade: 1 });
+                atualizarUI();
+            });
+        });
+        document.getElementById('enviaPedidoBtn')?.addEventListener('click', () => {
+            if (carrinho.length === 0) { alert("Adicione itens."); return; }
+            const itensEnvio = carrinho.map(i => ({ nome: i.nome, preco: i.preco, quantidade: i.quantidade }));
+            if (adicionarPedido(clienteId, itensEnvio)) {
+                alert("✅ Pedido enviado para a cozinha!");
+                carrinho = [];
+                atualizarUI();
+            } else alert("Erro.");
+        });
+        atualizarUI();
+    }
+    
+    function gerarQRCode() {
+        const urlAtual = window.location.href.split('?')[0];
+        const urlCliente = urlAtual + "?mode=cliente";
+        const qrDiv = document.getElementById('qrCodeDisplay');
+        if (qrDiv) {
+            qrDiv.innerHTML = "";
+            try {
+                new QRCode(qrDiv, { text: urlCliente, width: 140, height: 140, colorDark: "#5a3c24", colorLight: "#ffffff" });
+            } catch(e) { qrDiv.innerHTML = `<div>QR: ${urlCliente}</div>`; }
+        }
+    }
+    
+    function verificarModo() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('mode') === 'cliente') {
+            renderizarModoCliente();
+            return true;
+        }
+        return false;
+    }
+    
+    // Eventos e inicialização
+    window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY && !window.location.search.includes('mode=cliente')) renderDashboard();
+    });
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        if (!verificarModo()) {
+            gerarQRCode();
+            renderDashboard();
+            iniciarSimulacao();
+            document.getElementById('resetDemoBtn')?.addEventListener('click', resetSimulacao);
+            document.getElementById('abrirCardapioDemoBtn')?.addEventListener('click', abrirCardapioCliente);
+            document.getElementById('abrirBalcaoBtn')?.addEventListener('click', abrirModalBalcao);
+            const modal = document.getElementById('modalBalcao');
+            document.querySelector('.close-modal')?.addEventListener('click', fecharModal);
+            window.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
+            document.getElementById('enviarPedidoBalcaoBtn')?.addEventListener('click', enviarPedidoBalcao);
+        }
+    });
+    window.addEventListener('beforeunload', () => { if (intervaloSim) clearInterval(intervaloSim); });
+</script>
+</body>
+</html>
