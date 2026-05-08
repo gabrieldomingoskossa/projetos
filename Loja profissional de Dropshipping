@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Box Xpress | Dropshipping Profissional</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter + Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            color: #0a1c2f;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary: #1e7b5e;
+            --primary-dark: #0f5a44;
+            --primary-light: #e6f4ef;
+            --secondary: #2c3e50;
+            --gray-bg: #f8fafd;
+            --card-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --hover-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.15);
+            --radius-card: 28px;
+            --radius-sm: 20px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Header moderno com blur */
+        .header {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e7b5e, #2c9c7a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            font-weight: 500;
+            color: #2d3e40;
+        }
+
+        /* Botões modernos Vitrine/Admin */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            background: rgba(255,255,255,0.5);
+            padding: 4px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-tabs button {
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 32px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tabs button i {
+            font-size: 1.1rem;
+        }
+        .nav-tabs button.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .nav-tabs button:hover:not(.active) {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 26px;
+            cursor: pointer;
+            color: #1f2c38;
+            transition: 0.2s;
+        }
+        .cart-icon:hover { color: var(--primary); }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 3px 8px;
+            min-width: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .section.active-section {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Painel Rotativo - sem texto extra */
+        .rotating-hero {
+            background: linear-gradient(115deg, #ffffff 0%, #f6f9fe 100%);
+            border-radius: 48px;
+            margin: 40px 0 50px;
+            padding: 40px 48px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(30, 123, 94, 0.15);
+            transition: all 0.3s;
+        }
+        .rotating-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .rotating-header i {
+            font-size: 28px;
+            background: var(--primary-light);
+            padding: 12px;
+            border-radius: 60px;
+        }
+        /* Removido o texto de tempo, apenas ícone decorativo */
+        .rotating-header span {
+            display: none;
+        }
+        .rotating-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            align-items: center;
+            justify-content: center;
+        }
+        .rotating-image {
+            flex: 1;
+            min-width: 260px;
+            text-align: center;
+        }
+        .rotating-image img {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            border-radius: 32px;
+            box-shadow: 0 30px 40px -20px rgba(0,0,0,0.25);
+            transition: transform 0.3s;
+        }
+        .rotating-info {
+            flex: 1.5;
+        }
+        .rotating-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .rotating-name {
+            font-size: 2.6rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: #0a2b1f;
+        }
+        .rotating-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0 12px;
+        }
+        .rotating-desc {
+            color: #3a5468;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 8px 18px rgba(30,123,94,0.25);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(30,123,94,0.3);
+        }
+
+        /* Grid de produtos */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 20px 0 8px;
+            position: relative;
+            display: inline-block;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+            margin: 40px 0 60px;
+        }
+        .product-card {
+            background: white;
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            box-shadow: var(--card-shadow);
+            border: 1px solid #eef2f8;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: #dce5ec;
+        }
+        .product-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background: #f0f4f9;
+            transition: 0.3s;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.02);
+        }
+        .product-info {
+            padding: 22px 20px 26px;
+        }
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .product-price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 12px 0;
+        }
+        .product-desc {
+            font-size: 0.85rem;
+            color: #5b6f82;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            background: var(--primary-light);
+            border: none;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-add:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Admin Panel - com upload de imagem */
+        .admin-panel {
+            background: white;
+            border-radius: 40px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--card-shadow);
+        }
+        .form-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #1e2f3e;
+        }
+        input, textarea {
+            padding: 14px 18px;
+            border-radius: 28px;
+            border: 1px solid #cddfe7;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30,123,94,0.1);
+        }
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .product-admin-list {
+            margin-top: 40px;
+        }
+        .admin-item {
+            background: #f8fafd;
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .admin-actions button {
+            background: none;
+            border: none;
+            margin-left: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.1s;
+        }
+
+        /* Carrinho lateral */
+        .cart-overlay {
+            position: fixed;
+            top:0; right:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .cart-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .cart-sidebar {
+            position: fixed;
+            top:0; right:0;
+            width: 90%; max-width: 460px;
+            height: 100%;
+            background: white;
+            padding: 32px 28px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -8px 0 30px rgba(0,0,0,0.1);
+        }
+        .cart-overlay.open .cart-sidebar {
+            transform: translateX(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            background: #0a1c2f;
+            color: #bcd0df;
+            margin-top: 60px;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 0 20px; }
+            .rotating-hero { padding: 28px; }
+            .rotating-name { font-size: 1.8rem; }
+            .nav-tabs button { padding: 6px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">Box <span>Xpress</span></div>
+            <div class="nav-tabs">
+                <button id="tabLojaBtn" class="active"><i class="fas fa-store"></i> Vitrine</button>
+                <button id="tabAdminBtn"><i class="fas fa-user-shield"></i> Admin</button>
+            </div>
+            <div class="cart-icon" id="cartIcon">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <!-- Seção Loja -->
+    <div id="lojaSection" class="section active-section">
+        <!-- PAINEL VIRTUAL ROTATIVO (sem texto extra) -->
+        <div class="rotating-hero">
+            <div class="rotating-header">
+                <i class="fas fa-sync-alt fa-fw"></i>
+                <span style="display: none;">✦ Vitrine dinâmica – atualiza a cada 10 segundos ✦</span>
+            </div>
+            <div id="rotatingContent" class="rotating-content">
+                <div class="rotating-image">
+                    <img id="rotatingImg" src="https://placehold.co/400x400?text=Carregando" alt="Produto em destaque">
+                </div>
+                <div class="rotating-info">
+                    <div class="rotating-badge"><i class="fas fa-star"></i> Destaque da semana</div>
+                    <div class="rotating-name" id="rotatingName">Produto exemplo</div>
+                    <div class="rotating-price" id="rotatingPrice">R$ 0,00</div>
+                    <div class="rotating-desc" id="rotatingDesc">Descrição do produto que irá rodar automaticamente</div>
+                    <button class="btn-primary" id="rotatingBuyBtn"><i class="fas fa-shopping-cart"></i> Comprar agora</button>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">✨ Todos os produtos</h2>
+        <div id="productsGrid" class="products-grid">
+            <div class="loader"><i class="fas fa-spinner fa-pulse"></i> Carregando produtos...</div>
+        </div>
+    </div>
+
+    <!-- Seção Admin (protegido) -->
+    <div id="adminSection" class="section">
+        <div id="adminAuthBox" class="admin-panel">
+            <h3><i class="fas fa-lock"></i> Acesso restrito</h3>
+            <input type="password" id="adminPass" placeholder="Digite a senha" style="margin: 20px 0; width: 100%;">
+            <button id="loginAdminBtn" class="btn-primary">Acessar</button>
+            <!-- Nenhum texto de senha visível -->
+        </div>
+        <div id="adminContentPanel" style="display: none;">
+            <div class="admin-panel">
+                <h3><i class="fas fa-plus-circle"></i> Cadastrar / Editar produto</h3>
+                <form id="productForm" class="form-grid">
+                    <input type="hidden" id="editId">
+                    <div class="form-group"><label>Nome do produto *</label><input type="text" id="prodName" required></div>
+                    <div class="form-group"><label>Preço (R$)</label><input type="number" step="0.01" id="prodPrice" required></div>
+                    <div class="form-group">
+                        <label>Foto do produto *</label>
+                        <input type="file" id="prodImageFile" accept="image/*">
+                        <img id="imagePreview" class="image-preview" style="display: none;">
+                        <input type="hidden" id="prodImageBase64">
+                    </div>
+                    <div class="form-group"><label>Características / Descrição completa</label><textarea id="prodDesc" rows="3" placeholder="Material, dimensões, benefícios..."></textarea></div>
+                    <div><button type="submit" class="btn-primary">Salvar produto</button> <button type="button" id="cancelEdit" style="margin-left: 12px;">Cancelar edição</button></div>
+                </form>
+            </div>
+            <div class="product-admin-list">
+                <h3>📦 Gerenciar produtos</h3>
+                <div id="adminProductList"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>Box Xpress — todos os direitos reservados</p>
+</footer>
+
+<!-- Carrinho sidebar -->
+<div id="cartOverlay" class="cart-overlay">
+    <div class="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:20px;">
+            <h3>🛒 Seu carrinho</h3>
+            <button id="closeCartBtn" style="background:none; border:none; font-size:28px;">&times;</button>
+        </div>
+        <div id="cartItemsList" style="flex:1; overflow:auto; margin: 24px 0;"></div>
+        <div id="cartTotalBlock" style="border-top:1px solid #e2e8f0; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.4rem;"><span>Total</span><span id="cartTotalPrice">R$ 0,00</span></div>
+            <button id="finalizeCartBtn" class="btn-primary" style="width:100%; margin-top:20px;">Finalizar compra</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ====================== Gerenciamento de Estado ======================
+    let products = [];
+    let cart = [];
+    let rotationInterval = null;
+    let currentRotateIndex = 0;
+
+    // Carregar produtos iniciais (com imagens base64 de exemplo)
+    function loadStoredProducts() {
+        const stored = localStorage.getItem('boxxpress_products');
+        if (stored && JSON.parse(stored).length > 0) {
+            products = JSON.parse(stored);
+        } else {
+            // Produtos de exemplo com imagens placeholder (mas usaremos base64 simples via URL)
+            products = [
+                { id: 101, name: "Tênis Ultra Confort", price: 289.90, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400", description: "Tênis casual com amortecimento premium, ideal para o dia a dia." },
+                { id: 102, name: "Jaqueta Couro Ecológico", price: 379.00, image: "https://images.unsplash.com/photo-1551028719-00167b16eacf?w=400", description: "Estilo moderno, forro térmico, resistente à água." },
+                { id: 103, name: "Smartwatch S8", price: 449.90, image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400", description: "Monitor cardíaco, GPS, 10 dias de bateria." },
+                { id: 104, name: "Mochila Executiva 17L", price: 199.90, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400", description: "Impermeável, compartimento para notebook." },
+            ];
+            saveProductsToStorage();
+        }
+    }
+    function saveProductsToStorage() { localStorage.setItem('boxxpress_products', JSON.stringify(products)); }
+    function saveCartToStorage() { localStorage.setItem('boxxpress_cart', JSON.stringify(cart)); updateCartUI(); }
+    function loadCartFromStorage() {
+        const saved = localStorage.getItem('boxxpress_cart');
+        if (saved) cart = JSON.parse(saved);
+        else cart = [];
+        updateCartUI();
+    }
+
+    // Renderização da loja (grid)
+    function renderStoreGrid() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+        if (products.length === 0) { grid.innerHTML = '<div>Nenhum produto cadastrado. Acesse o Admin e adicione.</div>'; return; }
+        let html = '';
+        products.forEach(p => {
+            html += `
+                <div class="product-card">
+                    <img class="product-img" src="${p.image || 'https://placehold.co/400x400?text=Sem+imagem'}" alt="${escapeHtml(p.name)}" onerror="this.src='https://placehold.co/400x400?text=erro'">
+                    <div class="product-info">
+                        <div class="product-title">${escapeHtml(p.name)}</div>
+                        <div class="product-price">R$ ${p.price.toFixed(2)}</div>
+                        <div class="product-desc">${escapeHtml(p.description || 'Sem características adicionadas')}</div>
+                        <button class="btn-add" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}" data-img="${p.image || ''}"><i class="fas fa-cart-plus"></i> Adicionar</button>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+        document.querySelectorAll('.btn-add').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                const name = btn.dataset.name;
+                const price = parseFloat(btn.dataset.price);
+                const image = btn.dataset.img;
+                addToCart({ id, name, price, image });
+            });
+        });
+    }
+
+    // Adicionar ao carrinho
+    function addToCart(product) {
+        const existing = cart.find(i => i.id === product.id);
+        if (existing) existing.quantity += 1;
+        else cart.push({ ...product, quantity: 1 });
+        saveCartToStorage();
+        openCartSidebar();
+    }
+
+    // Update carrinho UI
+    function updateCartUI() {
+        const countSpan = document.getElementById('cartCount');
+        const totalItems = cart.reduce((sum, i) => sum + i.quantity, 0);
+        if (countSpan) countSpan.innerText = totalItems;
+        const cartListDiv = document.getElementById('cartItemsList');
+        const totalSpan = document.getElementById('cartTotalPrice');
+        if (!cartListDiv) return;
+        if (cart.length === 0) {
+            cartListDiv.innerHTML = '<p style="color:#8ba0ae;">Carrinho vazio.</p>';
+            document.getElementById('cartTotalBlock').style.display = 'none';
+            return;
+        }
+        let itemsHtml = '';
+        let total = 0;
+        cart.forEach((item, idx) => {
+            total += item.price * item.quantity;
+            itemsHtml += `
+                <div style="display:flex; gap:14px; margin-bottom:18px; border-bottom:1px solid #edf2f7; padding-bottom:12px;">
+                    <img src="${item.image || 'https://placehold.co/60'}" style="width:64px; height:64px; border-radius:18px; object-fit:cover;">
+                    <div style="flex:1">
+                        <strong>${escapeHtml(item.name)}</strong><br>
+                        <span>R$ ${item.price.toFixed(2)}</span>
+                        <div style="display:flex; gap:12px; margin-top:8px;">
+                            <button class="cart-qty-mod" data-index="${idx}" data-delta="-1">−</button>
+                            <span>${item.quantity}</span>
+                            <button class="cart-qty-mod" data-index="${idx}" data-delta="1">+</button>
+                            <button class="cart-remove" data-index="${idx}" style="color:#e25c3e;">Remover</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        cartListDiv.innerHTML = itemsHtml;
+        totalSpan.innerText = `R$ ${total.toFixed(2)}`;
+        document.getElementById('cartTotalBlock').style.display = 'block';
+
+        document.querySelectorAll('.cart-qty-mod').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.index);
+                const delta = parseInt(btn.dataset.delta);
+                if (!isNaN(idx) && cart[idx]) {
+                    const newQty = cart[idx].quantity + delta;
+                    if (newQty <= 0) cart.splice(idx, 1);
+                    else cart[idx].quantity = newQty;
+                    saveCartToStorage();
+                }
+            });
+        });
+        document.querySelectorAll('.cart-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.index);
+                cart.splice(idx, 1);
+                saveCartToStorage();
+            });
+        });
+    }
+
+    // Painel rotativo (10s)
+    function startRotatingCarousel() {
+        if (rotationInterval) clearInterval(rotationInterval);
+        if (products.length === 0) {
+            document.getElementById('rotatingName').innerText = "Nenhum produto disponível";
+            document.getElementById('rotatingPrice').innerHTML = "R$ 0,00";
+            return;
+        }
+        function updateRotating() {
+            if (products.length === 0) return;
+            if (currentRotateIndex >= products.length) currentRotateIndex = 0;
+            const prod = products[currentRotateIndex];
+            document.getElementById('rotatingImg').src = prod.image || 'https://placehold.co/400x400';
+            document.getElementById('rotatingName').innerText = prod.name;
+            document.getElementById('rotatingPrice').innerHTML = `R$ ${prod.price.toFixed(2)}`;
+            document.getElementById('rotatingDesc').innerText = prod.description || "Produto com qualidade premium e entrega rápida.";
+            const buyBtn = document.getElementById('rotatingBuyBtn');
+            const newBtn = buyBtn.cloneNode(true);
+            buyBtn.parentNode.replaceChild(newBtn, buyBtn);
+            newBtn.addEventListener('click', () => {
+                addToCart({ id: prod.id, name: prod.name, price: prod.price, image: prod.image });
+            });
+            currentRotateIndex++;
+        }
+        updateRotating();
+        rotationInterval = setInterval(updateRotating, 10000);
+    }
+
+    // Admin: listar produtos e CRUD
+    function renderAdminList() {
+        const adminContainer = document.getElementById('adminProductList');
+        if (!adminContainer) return;
+        if (products.length === 0) { adminContainer.innerHTML = '<p>Nenhum produto ainda. Adicione o primeiro!</p>'; return; }
+        let html = '';
+        products.forEach(p => {
+            html += `
+                <div class="admin-item">
+                    <div><strong>${escapeHtml(p.name)}</strong> - R$ ${p.price.toFixed(2)}</div>
+                    <div class="admin-actions">
+                        <button class="editProdBtn" data-id="${p.id}">✏️ Editar</button>
+                        <button class="deleteProdBtn" data-id="${p.id}">🗑️ Excluir</button>
+                    </div>
+                </div>
+            `;
+        });
+        adminContainer.innerHTML = html;
+        document.querySelectorAll('.editProdBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = Number(btn.dataset.id);
+                const prod = products.find(p => p.id === id);
+                if (prod) {
+                    document.getElementById('editId').value = prod.id;
+                    document.getElementById('prodName').value = prod.name;
+                    document.getElementById('prodPrice').value = prod.price;
+                    document.getElementById('prodDesc').value = prod.description || '';
+                    // Se tiver imagem, mostrar preview
+                    if (prod.image && prod.image.startsWith('data:image')) {
+                        const preview = document.getElementById('imagePreview');
+                        preview.src = prod.image;
+                        preview.style.display = 'block';
+                        document.getElementById('prodImageBase64').value = prod.image;
+                    } else {
+                        document.getElementById('imagePreview').style.display = 'none';
+                        document.getElementById('prodImageBase64').value = '';
+                    }
+                }
+            });
+        });
+        document.querySelectorAll('.deleteProdBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = Number(btn.dataset.id);
+                if (confirm('Excluir produto permanentemente?')) {
+                    products = products.filter(p => p.id !== id);
+                    saveProductsToStorage();
+                    renderAdminList();
+                    renderStoreGrid();
+                    startRotatingCarousel();
+                }
+            });
+        });
+    }
+
+    // Upload de imagem e conversão para base64
+    const fileInput = document.getElementById('prodImageFile');
+    const imagePreview = document.getElementById('imagePreview');
+    const hiddenBase64 = document.getElementById('prodImageBase64');
+
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64 = event.target.result;
+                hiddenBase64.value = base64;
+                imagePreview.src = base64;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+            hiddenBase64.value = '';
+        }
+    });
+
+    // Formulário admin salvar
+    document.getElementById('productForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const idEdit = document.getElementById('editId').value;
+        const name = document.getElementById('prodName').value.trim();
+        const price = parseFloat(document.getElementById('prodPrice').value);
+        let image = hiddenBase64.value;  // pode ser base64 ou string vazia
+        const description = document.getElementById('prodDesc').value.trim();
+
+        if (!name || isNaN(price)) return alert('Preencha nome e preço válido');
+        if (!image) {
+            // Se não selecionou nova imagem, mantém a antiga (caso edição)
+            if (idEdit) {
+                const existing = products.find(p => p.id == idEdit);
+                if (existing && existing.image) image = existing.image;
+                else image = 'https://placehold.co/400x400?text=Sem+imagem';
+            } else {
+                image = 'https://placehold.co/400x400?text=Sem+imagem';
+            }
+        }
+
+        if (idEdit) {
+            const idx = products.findIndex(p => p.id == idEdit);
+            if (idx !== -1) products[idx] = { ...products[idx], name, price, image, description };
+        } else {
+            const newId = Date.now();
+            products.push({ id: newId, name, price, image, description });
+        }
+        saveProductsToStorage();
+        // Reset form
+        document.getElementById('editId').value = '';
+        document.getElementById('productForm').reset();
+        imagePreview.style.display = 'none';
+        hiddenBase64.value = '';
+        fileInput.value = '';
+        renderAdminList();
+        renderStoreGrid();
+        startRotatingCarousel();
+    });
+    document.getElementById('cancelEdit')?.addEventListener('click', () => {
+        document.getElementById('editId').value = '';
+        document.getElementById('productForm').reset();
+        imagePreview.style.display = 'none';
+        hiddenBase64.value = '';
+        fileInput.value = '';
+    });
+
+    // Login admin (senha 12345678)
+    const loginBtn = document.getElementById('loginAdminBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            const pwd = document.getElementById('adminPass').value;
+            if (pwd === '12345678') {
+                sessionStorage.setItem('admin_logged', 'true');
+                document.getElementById('adminAuthBox').style.display = 'none';
+                document.getElementById('adminContentPanel').style.display = 'block';
+                renderAdminList();
+            } else alert('Senha incorreta');
+        });
+    }
+    function checkAdminAccess() {
+        if (sessionStorage.getItem('admin_logged') === 'true') {
+            document.getElementById('adminAuthBox').style.display = 'none';
+            document.getElementById('adminContentPanel').style.display = 'block';
+            renderAdminList();
+        } else {
+            document.getElementById('adminAuthBox').style.display = 'block';
+            document.getElementById('adminContentPanel').style.display = 'none';
+        }
+    }
+
+    // Tabs
+    const lojaBtn = document.getElementById('tabLojaBtn');
+    const adminBtn = document.getElementById('tabAdminBtn');
+    lojaBtn.addEventListener('click', () => {
+        lojaSection.classList.add('active-section');
+        adminSection.classList.remove('active-section');
+        lojaBtn.classList.add('active');
+        adminBtn.classList.remove('active');
+        renderStoreGrid();
+        startRotatingCarousel();
+    });
+    adminBtn.addEventListener('click', () => {
+        lojaSection.classList.remove('active-section');
+        adminSection.classList.add('active-section');
+        adminBtn.classList.add('active');
+        lojaBtn.classList.remove('active');
+        checkAdminAccess();
+    });
+
+    // Carrinho lateral
+    function openCartSidebar() { document.getElementById('cartOverlay').classList.add('open'); }
+    function closeCartSidebar() { document.getElementById('cartOverlay').classList.remove('open'); }
+    document.getElementById('cartIcon')?.addEventListener('click', openCartSidebar);
+    document.getElementById('closeCartBtn')?.addEventListener('click', closeCartSidebar);
+    document.getElementById('finalizeCartBtn')?.addEventListener('click', () => {
+        if (cart.length === 0) return alert('Adicione itens ao carrinho');
+        alert(`✅ Pedido concluído! Total: R$ ${cart.reduce((s,i)=>s+(i.price*i.quantity),0).toFixed(2)}. Obrigado!`);
+        cart = [];
+        saveCartToStorage();
+        closeCartSidebar();
+    });
+
+    // Inicializar tudo
+    loadStoredProducts();
+    loadCartFromStorage();
+    renderStoreGrid();
+    startRotatingCarousel();
+
+    // Helper
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+</script>
+</body>
+</html>
